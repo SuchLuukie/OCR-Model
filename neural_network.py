@@ -1,49 +1,88 @@
 # Import libraries
+from math import exp, pow
+from random import randint
 import matplotlib.pyplot as plt
 
 # Import files
 from artificial_task import Dataset
 
 class Layer:
-    def __init__(self, num_nodes, num_outputs) -> None:
-        self.num_nodes = num_nodes
-        self.num_outputs = num_outputs
+    def __init__(self, num_nodes_in, num_nodes_out) -> None:
+        self.num_nodes_in = num_nodes_in
+        self.num_nodes_out = num_nodes_out
 
-        self.biases = [0 for _ in range(self.num_outputs)]
-        self.weights = [[0 for _ in range(self.num_outputs)] for _ in range(self.num_nodes)]
+        self.biases = [0 for _ in range(self.num_nodes_out)]
+        self.weights = [[0 for _ in range(self.num_nodes_out)] for _ in range(self.num_nodes_in)]
 
     def calculate_outputs(self, input):
-        weighted_output = []
+        activations = []
 
-        for node_output in range(self.num_outputs):
-            output = self.biases[node_output]
+        for node_out in range(self.num_nodes_out):
+            output = self.biases[node_out]
 
-            for node in range(self.num_nodes):
-                output += input[node] * self.weights[node][node_output]
+            for node_in in range(self.num_nodes_in):
+                output += input[node_in] * self.weights[node_in][node_out]
 
-            weighted_output.append(output)
+            activations.append(self.activation_function(output))
 
-        return weighted_output
+        return activations
+
+    # Sigmoid activation function
+    def activation_function(self, weighted_input):
+        return 1 / (1 + exp(-weighted_input))
+
+    def node_cost(self, output_activation, expected_output):
+        error = output_activation - expected_output
+        return error * error
                 
 
 class NeuralNetwork:
     def __init__(self) -> None:
+        self.learn_rate = 0.3
+
         self.input_size = 2
         self.output_size = 2
 
-        self.hidden_layers_amount = 1
+        self.hidden_layers_amount = 0
         self.hidden_layers_size = 3
 
-
-        self.layers = [Layer(self.output_size, self.output_size)]
-        #self.layers = [Layer(self.hidden_layers_size, self.output_size) for _ in range(self.hidden_layers_amount)]
-        #self.layers.append(Layer(self.output_size, self.output_size))
+        self.generate_network()
 
         self.training_data = Dataset().dataset
         self.safe_colour = ("#0000ff",)
         self.danger_colour = ("#ff0000",)
 
         self.visualise()
+
+
+    # Data point = [int, float, float]
+    def cost(self, data_point):
+        output = self.calculate_outputs([data_point[1], data_point[2]])
+        output_layer = self.layers[-1]
+
+        cost = 0
+        for node_out in range(len(output)):
+            # ? Maybe a mistake here
+            cost += output_layer.node_cost(output[node_out], data_point[0])
+
+        return cost
+
+    # Generates the correct amount of hidden layers/output that are defined in init
+    def generate_network(self):
+        self.layers = []
+        for i in range(self.hidden_layers_amount):
+            if i == 0:
+                self.layers.append(Layer(self.input_size, self.hidden_layers_size))
+            elif i == self.hidden_layers_amount:
+                self.layers.append(Layer(self.hidden_layers_size, self.output_size))
+            else:
+                self.layers.append(Layer(self.hidden_layers_size, self.hidden_layers_size))
+
+        if self.hidden_layers_amount > 0:
+            self.layers.append(Layer(self.hidden_layers_size, self.output_size))
+        else:
+            self.layers.append(Layer(self.input_size, self.output_size))
+            
 
     def classify(self, input):
         output = self.calculate_outputs(input)
@@ -56,6 +95,7 @@ class NeuralNetwork:
 
         return input
 
+    # Visualizes all datapoints and the network's guess as a colourmap
     def visualise(self):
         # Set graph limitation
         plt.xlim([0, 100])
