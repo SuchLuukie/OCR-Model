@@ -1,6 +1,6 @@
 # Import libraries
+import numpy as np
 from math import exp, pow
-from random import randint
 import matplotlib.pyplot as plt
 
 # Import files
@@ -13,6 +13,8 @@ class Layer:
 
         self.biases = [0 for _ in range(self.num_nodes_out)]
         self.weights = [[0 for _ in range(self.num_nodes_out)] for _ in range(self.num_nodes_in)]
+        self.weights[0] = [-1, -0.3]
+        self.weights[1] = [-0.3, -1]
 
     def calculate_outputs(self, input):
         activations = []
@@ -53,7 +55,6 @@ class NeuralNetwork:
         self.danger_colour = ("#ff0000",)
 
         self.visualise()
-
 
     # Data point = [int, float, float]
     def cost(self, data_point):
@@ -97,10 +98,15 @@ class NeuralNetwork:
 
     # Visualizes all datapoints and the network's guess as a colourmap
     def visualise(self):
-        # Set graph limitation
-        plt.xlim([0, 100])
-        plt.ylim([0, 100])
+        image_size = 500
+        plt.xlim([0, image_size])
+        plt.ylim([0, image_size])
 
+        # Visualizing normalised data as a colour map
+        colour_map = np.ndarray(shape=(image_size, image_size, 3), dtype=np.uint8)
+        for i in range(image_size):
+            for j in range(image_size):
+                colour_map[i, j] = self.classify([i, j])
 
         # Visualizing the dataset
         for data in self.training_data:
@@ -109,22 +115,11 @@ class NeuralNetwork:
             else: colour = self.danger_colour
 
             # Place the scatter
-            plt.scatter((data[1]*100,), (data[2]*100,), s=(7,), c=colour)
-
-
-        # Visualizing normalised data as a colour map
-        colour_map = []
-        for i in range(101):
-            normalI = i
-            colour_row = []
-            for j in range(101):
-                normalJ = j
-                colour_row.append(self.classify([normalI, normalJ]))
-            colour_map.append(colour_row)
-
-
+            plt.scatter((data[1]*image_size,), (data[2]*image_size,), s=(10,), c=colour)
+            
         # Add the colour map and show the plot
         plt.imshow(colour_map)
+        plt.title(f"{image_size}x scaled (Higher Resolution)")
         plt.show()
 
 
