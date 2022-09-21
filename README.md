@@ -3,7 +3,8 @@ The goal of this project is to create a neural network from scratch and teaching
 
 
 # Artificial Neural Network (ANN)
-* Basic prototype - Using what I found in my research I'm developing a small ANN that uses weights and biases to process and a small self made dataset. (See below.) In this small network you can manually adjust the weights and biases to see the neural network adjust it's output.
+* Basic prototype: <br>
+    Using what I found in my research I'm developing a small ANN that uses weights and biases to process and a small self made dataset. (See below.) In this small network you can manually adjust the weights and biases to see the neural network adjust it's output.
 
 
 
