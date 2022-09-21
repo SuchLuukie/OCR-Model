@@ -17,5 +17,5 @@ The two floats determine whether the datapoint is true or false, when the floats
 I display the dataset in a graph in matplotlib, with a colour map behind it.
 The colour map runs every pixel through the ANN and determines what colour the pixel should be from that output.
 
-* Basic prototype visualisation:
+* Basic prototype visualisation: <br>
     <img src="/resources/prototype.png"/>
