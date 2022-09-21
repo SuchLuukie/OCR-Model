@@ -94,7 +94,7 @@ class NeuralNetwork:
 
         return input
 
-    # Visualizes all datapoints and the network's guess as a colourmap
+    # Visualizes all datapoints and the network's prediction as a colourmap
     def visualise(self):
         image_size = 500
         plt.xlim([0, image_size])
