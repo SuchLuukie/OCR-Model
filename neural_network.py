@@ -4,7 +4,7 @@ from math import exp, pow
 import matplotlib.pyplot as plt
 
 # Import files
-from artificial_task import Dataset
+from dataset import Dataset
 
 class Layer:
     def __init__(self, num_nodes_in, num_nodes_out) -> None:
@@ -13,7 +13,7 @@ class Layer:
 
         self.biases = [0 for _ in range(self.num_nodes_out)]
         self.weights = [[0 for _ in range(self.num_nodes_out)] for _ in range(self.num_nodes_in)]
-        self.weights[0] = [-1, -0.3]
+        self.weights[0] = [-1, -0.8]
         self.weights[1] = [-0.3, -1]
 
     def calculate_outputs(self, input):
@@ -84,7 +84,6 @@ class NeuralNetwork:
         else:
             self.layers.append(Layer(self.input_size, self.output_size))
             
-
     def classify(self, input):
         output = self.calculate_outputs(input)
         if output[0] > output[1]: return (122, 133, 255)
@@ -106,7 +105,7 @@ class NeuralNetwork:
         colour_map = np.ndarray(shape=(image_size, image_size, 3), dtype=np.uint8)
         for i in range(image_size):
             for j in range(image_size):
-                colour_map[i, j] = self.classify([i, j])
+                colour_map[i, j] = self.classify([i/image_size, j/image_size])
 
         # Visualizing the dataset
         for data in self.training_data:
@@ -121,7 +120,6 @@ class NeuralNetwork:
         plt.imshow(colour_map)
         plt.title(f"{image_size}x scaled (Higher Resolution)")
         plt.show()
-
 
 
 if __name__ == "__main__":

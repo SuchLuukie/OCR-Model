@@ -3,10 +3,11 @@ from random import random
 # Selfmade simple dataset for testing the neural network
 
 # Dataset sample
-# [0, 4.2, 5.2]
+# [0, 0.5, 0.2]
 # First int is whether is lethal or not (0 False, 1 True)
 # Second float is 0-1
 # Third float is 0-1
+# Datapoint is lethal if second and third float combined is >= 1.3
 
 
 class Dataset:
