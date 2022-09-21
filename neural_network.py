@@ -13,8 +13,6 @@ class Layer:
 
         self.biases = [0 for _ in range(self.num_nodes_out)]
         self.weights = [[0 for _ in range(self.num_nodes_out)] for _ in range(self.num_nodes_in)]
-        self.weights[0] = [-1, -0.8]
-        self.weights[1] = [-0.3, -1]
 
     def calculate_outputs(self, input):
         activations = []
@@ -36,7 +34,7 @@ class Layer:
     def node_cost(self, output_activation, expected_output):
         error = output_activation - expected_output
         return error * error
-                
+
 
 class NeuralNetwork:
     def __init__(self) -> None:
@@ -54,6 +52,7 @@ class NeuralNetwork:
         self.safe_colour = ("#0000ff",)
         self.danger_colour = ("#ff0000",)
 
+        print(self.cost(self.training_data))
         self.visualise()
 
     # Data point = [int, float, float]
@@ -120,6 +119,17 @@ class NeuralNetwork:
         plt.imshow(colour_map)
         plt.title(f"{image_size}x scaled (Higher Resolution)")
         plt.show()
+
+    def cost(self, dataset):
+        cost = 0
+        for datapoint in dataset:
+            output = self.calculate_outputs([datapoint[1], datapoint[2]])
+            output_layer = self.layers[-1]
+
+            for node in range(output_layer.num_nodes_out):
+                cost += output_layer.node_cost(output[node], datapoint[0])
+
+        return cost / len(dataset)
 
 
 if __name__ == "__main__":
